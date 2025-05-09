@@ -1,0 +1,1 @@
+/usr/bin/c++  -std=gnu++0x  CMakeFiles/ftp_server.dir/ftp_server.cpp.o CMakeFiles/ftp_server.dir/FTPServer.cpp.o CMakeFiles/ftp_server.dir/ClientConnection.cpp.o -o ftp_server 

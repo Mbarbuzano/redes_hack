@@ -1,0 +1,3 @@
+/home/usuario/redes/sockets2425-pe203-4/ftp_server_cpp/CMakeFiles/ftp_server.dir
+/home/usuario/redes/sockets2425-pe203-4/ftp_server_cpp/CMakeFiles/edit_cache.dir
+/home/usuario/redes/sockets2425-pe203-4/ftp_server_cpp/CMakeFiles/rebuild_cache.dir

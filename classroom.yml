@@ -1,0 +1,99 @@
+name: Autograding Tests
+on:
+  - push
+  - workflow_dispatch
+  - repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Configure CMake
+      run: cd ftp_server_cpp && cmake .
+    - name: Build
+      run: cd ftp_server_cpp && make
+    - name: Python-install-requirements
+      run: pip install -r ftp_server_testing/requirements.txt
+
+    - name: Test Get (active mode)
+      uses: classroom-resources/autograding-command-grader@v1
+      id: active_get
+      with:
+        test-name: active_mode_get
+        timeout: '15'
+        max-score: '1'
+        command: pytest -k active_mode_get
+
+    - name: Test Get (passive mode)
+      uses: classroom-resources/autograding-command-grader@v1
+      id: passive_get
+      with:
+        test-name: passive_mode_get
+        timeout: '15'
+        max-score: '1'
+        command: pytest -k passive_mode_get
+
+    - name: Test Put (active mode)
+      uses: classroom-resources/autograding-command-grader@v1
+      id: active_put
+      with:
+        test-name: active_mode_put
+        timeout: '15'
+        max-score: '1'
+        command: pytest -k active_mode_put
+
+    - name: Test Put (passive mode)
+      uses: classroom-resources/autograding-command-grader@v1
+      id: passive_put
+      with:
+        test-name: passive_mode_put
+        timeout: '15'
+        max-score: '1'
+        command: pytest -k passive_mode_put
+
+
+    - name: Test List (active mode)
+      uses: classroom-resources/autograding-command-grader@v1
+      id: active_list
+      with:
+        test-name: active_mode_list
+        timeout: '15'
+        max-score: '1'
+        command: pytest -k active_mode_list
+
+    - name: Test List (passive mode)
+      uses: classroom-resources/autograding-command-grader@v1
+      id: passive_list
+      with:
+        test-name: passive_mode_list
+        timeout: '15'
+        max-score: '1'
+        command: pytest -k passive_mode_list
+
+    - name: Test PUT + GET + LIST + ACTIVE + PASIVE
+      uses: classroom-resources/autograding-command-grader@v1
+      id: put_get_list_active_passive
+      with:
+        test-name: put_get_list_active_passive
+        timeout: '15'
+        max-score: '1'
+        command: pytest -k put_get_list_active_passive
+
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        ACTIVE_GET_RESULTS: "${{steps.active_get.outputs.result}}"
+        PASSIVE_GET_RESULTS: "${{steps.passive_get.outputs.result}}"
+        ACTIVE_PUT_RESULTS: "${{steps.active_put.outputs.result}}"
+        PASSIVE_PUT_RESULTS: "${{steps.passive_put.outputs.result}}"
+        ACTIVE_LIST_RESULTS: "${{steps.active_list.outputs.result}}"
+        PASSIVE_LIST_RESULTS: "${{steps.passive_list.outputs.result}}"
+        PUT_GET_LIST_ACTIVE_PASSIVE_RESULTS: "${{steps.put_get_list_active_passive.outputs.result}}"
+      with:
+        runners: active_get, passive_get, active_put, passive_put, active_list, put_get_list_active_passive
